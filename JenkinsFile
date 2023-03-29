@@ -10,7 +10,7 @@ stage('Build Docker Images') {
             steps {
                 script {
                     echo registry
-                    sh 'docker image build -t sumithpe/poc6auth .'
+                    sh 'docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/Dockerfile'
                 }
             }
         }
@@ -35,7 +35,7 @@ stage('Upload to DockerHub'){
        stage('Docker Run') {
         steps {
             script {
-                sh 'docker container run -d -p 4200:80 --rm --name poc6authcon sumithpe/poc6auth'
+                sh 'docker container run -d -p 49356:80 --rm --name poc6authcon sumithpe/poc6auth'
                 }
             }
         }
