@@ -10,7 +10,7 @@ stage('Build Docker Images') {
             steps {
                 script {
                     echo registry
-                    sh 'docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/Dockerfile'
+                    sh 'docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/'
                 }
             }
         }
