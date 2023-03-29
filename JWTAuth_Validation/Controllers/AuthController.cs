@@ -11,7 +11,7 @@ using System.Text;
 
 namespace JWTAuth_Validation.Controllers
 {
-    [EnableCors]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
