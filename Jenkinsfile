@@ -21,7 +21,7 @@ pipeline{
         withSonarQubeEnv('sonarqube-8.9') { 
         // If you have configured more than one global server connection, you can specify its name
 //      sh "${scannerHome}/bin/sonar-scanner"
-        sh "dotnet sonarscanner end /d:sonar.login="sqp_87bc636c842a09d39b0aedd4e9f061d34b3dc10f""
+        sh 'dotnet sonarscanner end /d:sonar.login="sqp_87bc636c842a09d39b0aedd4e9f061d34b3dc10f"'
     }
         }
         }
