@@ -1,0 +1,13 @@
+steps:
+  - name: "gcr.io/gcp-enterprise-class-lz/git"
+    args: ["clone", "https://github.com/sumit871996/poc6auth.git"]
+
+  - name: "gcr.io/gcp-enterprise-class-lz/emp_auth"
+    args: ["build", "-t", "${_REPO_NAME}/${_CONTAINERNAME}:${_VERSION}", "."]
+
+  - name: "gcr.io/gcp-enterprise-class-lz/emp_auth"
+    args: ["push", "${_REPO_NAME}/${_CONTAINERNAME}:${_VERSION}"]
+substitutions:
+  _CONTAINERNAME: poc6auth
+  _REPO_NAME: sumithpe
+  _VERSION: "1.5"
