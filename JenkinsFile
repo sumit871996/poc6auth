@@ -14,8 +14,8 @@ pipeline {
      }
             steps{
                 
-                sudo dotnet sonarscanner begin /k:poc6-auth /d:sonar.host.url=http://35.225.86.148:9000  /d:sonar.login=sqp_d603102bb6539e9746d5651f69e6da3ba31113b4
-                cd /home/sumit_bharat_mandlik/remotejenkins/workspace/poc6-sumit-auth/ && sudo dotnet build
+                sh "sudo dotnet sonarscanner begin /k:poc6-auth /d:sonar.host.url=http://35.225.86.148:9000  /d:sonar.login=sqp_d603102bb6539e9746d5651f69e6da3ba31113b4"
+                sh "cd /home/sumit_bharat_mandlik/remotejenkins/workspace/poc6-sumit-auth/ && sudo dotnet build"
                 
             }
          }
