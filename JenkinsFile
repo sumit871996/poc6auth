@@ -25,7 +25,7 @@ agent {
      }
             steps {
                 script {
-                       
+                       echo registry
                         }
                 }
             }
@@ -38,7 +38,7 @@ agent {
      label 'authenticationNode'
      }
          steps {
-            
+            echo registry
          }
        }
        stage('Docker Run') {
@@ -47,7 +47,7 @@ agent {
      }
         steps {
             script {
-                
+                echo registry
                 }
             }
         }
