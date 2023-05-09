@@ -14,7 +14,6 @@ agent {
      }
             steps {
                 script {
-                    echo registry
                     docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/
                 }
             }
