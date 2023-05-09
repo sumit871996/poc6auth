@@ -38,7 +38,9 @@ agent {
      label 'authenticationNode'
      }
          steps {
+         script{
             'docker container rm -f poc6authcon'
+            }
          }
        }
        stage('Docker Run') {
