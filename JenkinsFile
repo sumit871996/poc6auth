@@ -29,7 +29,7 @@ pipeline {
         // If you have configured more than one global server connection, you can specify its name
 //      sh "${scannerHome}/bin/sonar-scanner"
 script {
-        'sudo dotnet sonarscanner end /d:sonar.login=sqp_d603102bb6539e9746d5651f69e6da3ba31113b4'
+        sh "sudo dotnet sonarscanner end /d:sonar.login=sqp_d603102bb6539e9746d5651f69e6da3ba31113b4"
         }
     
         }
@@ -41,7 +41,7 @@ agent {
      }
             steps {
                 
-                    sudo docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/
+                    sh "sudo docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/"
                 
             }
         }
@@ -51,8 +51,8 @@ agent {
      }
             steps {
                 
-                       echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
-                        sudo docker image push sumithpe/poc6auth:latest
+                       sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+                        sh "sudo docker image push sumithpe/poc6auth:latest"
                        
                 }
             }
@@ -66,8 +66,8 @@ agent {
      }
          steps {
         
-            docker ps -f name=poc6authcon  -q | xargs --no-run-if-empty docker container stop
-            docker container ls -a -fname=poc6authcon -q | xargs -r docker container rm
+            sh "docker ps -f name=poc6authcon  -q | xargs --no-run-if-empty docker container stop"
+            sh "docker container ls -a -fname=poc6authcon -q | xargs -r docker container rm"
             
          }
        }
@@ -77,7 +77,7 @@ agent {
      }
         steps {
           
-                sudo docker container run -d -p 49356:80 --rm --name poc6authcon sumithpe/poc6auth
+                sh "sudo docker container run -d -p 49356:80 --rm --name poc6authcon sumithpe/poc6auth"
                 
             }
         }
