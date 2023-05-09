@@ -38,8 +38,8 @@ agent {
      label 'authenticationNode'
      }
          steps {
-            'docker ps -f name=poc6authcon  -q | xargs --no-run-if-empty docker container stop'
-            'docker container ls -a -fname=poc6authcon -q | xargs -r docker container rm'
+            sh 'docker ps -f name=poc6authcon  -q | xargs --no-run-if-empty docker container stop'
+            sh 'docker container ls -a -fname=poc6authcon -q | xargs -r docker container rm'
          }
        }
        stage('Docker Run') {
