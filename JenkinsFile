@@ -24,7 +24,7 @@ agent {
      }
             steps {
                 script {
-                       'sudo echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                       'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                         'sudo docker image push sumithpe/poc6auth:latest'
                         }
                 }
@@ -38,8 +38,8 @@ agent {
      label 'authenticationNode'
      }
          steps {
-            'sudo docker ps -f name=poc6authcon  -q | xargs --no-run-if-empty docker container stop'
-            'sudo docker container ls -a -fname=poc6authcon -q | xargs -r docker container rm'
+            'docker ps -f name=poc6authcon  -q | xargs --no-run-if-empty docker container stop'
+            'docker container ls -a -fname=poc6authcon -q | xargs -r docker container rm'
          }
        }
        stage('Docker Run') {
