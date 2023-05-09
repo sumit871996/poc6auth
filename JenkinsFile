@@ -7,33 +7,7 @@ pipeline {
         PATH = "$PATH:/root/.dotnet/tools"
     }
     stages {
-    stage('Build'){
-    agent {
-     label 'sonarQube_node'
-     }
-            steps{
-                sh 'export PATH="$PATH:/root/.dotnet/tools"'
-                sh 'pwd'
-                sh 'cd /home/sumit_bharat_mandlik/remotejenkins/workspace/poc6auth/'
-                sh 'sudo dotnet sonarscanner begin /k:"poc6-auth" /d:sonar.host.url="http://35.225.86.148:9000"  /d:sonar.login="sqp_d603102bb6539e9746d5651f69e6da3ba31113b4"'
-                sh 'sudo dotnet build'
-            }
-         }
-        stage('SonarQube analysis') {
-        agent {
-     label 'sonarQube_node'
-     }
-//    def scannerHome = tool 'SonarScanner 4.0';
-        steps{
-         
-        // If you have configured more than one global server connection, you can specify its name
-//      sh "${scannerHome}/bin/sonar-scanner"
-        sh 'sudo dotnet sonarscanner end /d:sonar.login="sqp_d603102bb6539e9746d5651f69e6da3ba31113b4"'
     
-        }
-        }
-        
-        
 stage('Build Docker Images') {
 agent {
      label 'authenticationNode'
