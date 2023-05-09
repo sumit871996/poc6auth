@@ -15,7 +15,7 @@ agent {
             steps {
                 script {
                     echo registry
-                    
+                    sh 'docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/'
                 }
             }
         }
@@ -25,7 +25,8 @@ agent {
      }
             steps {
                 script {
-                       echo registry
+                       sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                        sh 'docker image push sumithpe/poc6auth:latest'
                         }
                 }
             }
@@ -38,7 +39,8 @@ agent {
      label 'authenticationNode'
      }
          steps {
-            echo registry
+            sh 'docker ps -f name=poc6authcon  -q | xargs --no-run-if-empty docker container stop'
+            sh 'docker container ls -a -fname=poc6authcon -q | xargs -r docker container rm'
          }
        }
        stage('Docker Run') {
@@ -47,7 +49,7 @@ agent {
      }
         steps {
             script {
-                echo registry
+                sh 'docker container run -d -p 49356:80 --rm --name poc6authcon sumithpe/poc6auth'
                 }
             }
         }
