@@ -13,10 +13,10 @@ pipeline {
      label 'sonarQube_node'
      }
             steps{
-                script{
-                sh 'sudo dotnet sonarscanner begin /k:poc6-auth /d:sonar.host.url=http://35.225.86.148:9000  /d:sonar.login=sqp_d603102bb6539e9746d5651f69e6da3ba31113b4'
-                sh 'cd /home/sumit_bharat_mandlik/remotejenkins/workspace/poc6-sumit-auth/ && sudo dotnet build'
-                }
+                
+                sudo dotnet sonarscanner begin /k:poc6-auth /d:sonar.host.url=http://35.225.86.148:9000  /d:sonar.login=sqp_d603102bb6539e9746d5651f69e6da3ba31113b4
+                cd /home/sumit_bharat_mandlik/remotejenkins/workspace/poc6-sumit-auth/ && sudo dotnet build
+                
             }
          }
         stage('SonarQube analysis') {
@@ -40,9 +40,9 @@ agent {
      label 'authenticationNode'
      }
             steps {
-                script {
-                    'sudo docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/'
-                }
+                
+                    sudo docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/
+                
             }
         }
 stage('Upload to DockerHub'){
@@ -50,10 +50,10 @@ agent {
      label 'authenticationNode'
      }
             steps {
-                script {
-                       'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                        'sudo docker image push sumithpe/poc6auth:latest'
-                        }
+                
+                       echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                        sudo docker image push sumithpe/poc6auth:latest
+                       
                 }
             }
 
@@ -65,10 +65,10 @@ agent {
      label 'authenticationNode'
      }
          steps {
-         script{
-            'docker ps -f name=poc6authcon  -q | xargs --no-run-if-empty docker container stop'
-            'docker container ls -a -fname=poc6authcon -q | xargs -r docker container rm'
-            }
+        
+            docker ps -f name=poc6authcon  -q | xargs --no-run-if-empty docker container stop
+            docker container ls -a -fname=poc6authcon -q | xargs -r docker container rm
+            
          }
        }
        stage('Docker Run') {
@@ -76,9 +76,9 @@ agent {
      label 'authenticationNode'
      }
         steps {
-            script {
-                'sudo docker container run -d -p 49356:80 --rm --name poc6authcon sumithpe/poc6auth'
-                }
+          
+                sudo docker container run -d -p 49356:80 --rm --name poc6authcon sumithpe/poc6auth
+                
             }
         }
     }
