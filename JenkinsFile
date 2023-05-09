@@ -14,7 +14,7 @@ agent {
      }
             steps {
                 script {
-                    docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/
+                    sudo docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/
                 }
             }
         }
