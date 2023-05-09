@@ -39,7 +39,8 @@ agent {
      }
          steps {
          script{
-            'docker container rm -f poc6authcon'
+            sh 'docker ps -f name=poc6authcon  -q | xargs --no-run-if-empty docker container stop'
+            sh 'docker container ls -a -fname=poc6authcon -q | xargs -r docker container rm'
             }
          }
        }
