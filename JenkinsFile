@@ -1,6 +1,8 @@
 pipeline {
      agent none
-     
+     options {
+        skipDefaultCheckout(true)
+    }
      environment {
         dockerImage = ''
         registry = 'sumithpe/poc6auth'
