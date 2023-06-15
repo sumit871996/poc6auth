@@ -62,6 +62,33 @@ pipeline{
             }
         }
 
+stage('Building'){
+    agent{
+     label 'sonarQube_node'
+     }
+            steps{
+                   sh'''
+                   export PATH = "$PATH:/root/.dotnet/tools"
+                   dotnet sonarscanner begin /k:'poc6-auth' /d:sonar.host.url='http://35.225.86.148:9000' /d:sonar.login='sqp_d603102bb6539e9746d5651f69e6da3ba31113b4' && dotnet build
+                   '''
+            }
+         }
+        stage('SonarQube analysis') {
+        agent {
+     label 'sonarQube_node'
+     }
+//    def scannerHome = tool 'SonarScanner 4.0';
+        steps{
+         
+        // If you have configured more than one global server connection, you can specify its name
+//      sh "${scannerHome}/bin/sonar-scanner"
+script {
+        sh "sudo dotnet sonarscanner end /d:sonar.login=sqp_d603102bb6539e9746d5651f69e6da3ba31113b4"
+        }
+    
+        }
+        }
+
           
   
           
