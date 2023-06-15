@@ -15,9 +15,7 @@ pipeline {
      label 'sonarQube_node'
      }
             steps{
-               sh '''
                pwd
-                '''
                 
             }
          }
