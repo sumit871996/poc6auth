@@ -1,8 +1,7 @@
 pipeline{
      agent none
      environment{   
-     PATH = "$PATH:/root/.dotnet/tools"
-     
+ 
     DOCKERHUB_CREDENTIALS= credentials('dockerhub_id')
     GITHUB_CREDENTIALS= credentials('github_id')
     REVISION = 19
