@@ -1,13 +1,12 @@
 pipeline{
      agent none
-     environment{ 
-    dockerImage = ''
-    registry = 'sumithpe/poc6auth'
-    PATH = "$PATH:/root/.dotnet/tools"
+     environment{     
     DOCKERHUB_CREDENTIALS= credentials('dockerhub_id')
     GITHUB_CREDENTIALS= credentials('github_id')
     REVISION = 19
     HARBOR_CREDENTIALS = credentials('harbor_id') 
+
+    
 } 
      stages{
          stage('Checkout') {
@@ -15,7 +14,7 @@ pipeline{
      label 'pocauth'
      }
           steps{ 
-          git branch: 'main', url: 'https://github.com/sumit871996/poc6auth.git'
+          git branch: 'main', url: 'https://github.com/RutikKalokhe/Image-Identification-Backend.git'
                }
           }
       
@@ -24,43 +23,49 @@ pipeline{
      label 'pocauth'
      }
           steps{
-             
-               sh "sudo docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/"
+               sh "docker image build -t sumithpe/imagebackidentification:$REVISION ."
                }  
           }
           
           
           stage('Docker push'){
           agent{
-     label 'pocauth'
+     label 'imageidentificationfront'
      }
           steps{
                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                        sh "sudo docker image push sumithpe/poc6auth:latest"
+                        sh "docker image push sumithpe/imagebackidentification:$REVISION"
                
           }
-          }  
-          stage('docker stop container') {
-        agent {
-     label 'pocauth'
-     }
-         steps {
-        
-            sh "docker ps -f name=poc6authcon  -q | xargs --no-run-if-empty docker container stop"
-            sh "docker container ls -a -fname=poc6authcon -q | xargs -r docker container rm"
-            
-         }
-       }
-          stage('Docker Run') {
-       agent {
-     label 'pocauth'
-     }
-        steps {
+          }   
           
-                sh "sudo docker container run -d -p 49356:80 --rm --name poc6authcon sumithpe/poc6auth"
-                
-            }
-        }
+          
+          
+          
+          
+          
+          
+          
+          
+          stage('Git update'){
+          agent{
+     label 'imageidentificationfront'
+     }
+          steps{
+          script {
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          sh '''
+               cd /home/hpe/imageidentification/imageidentificationconfig
+                    git pull https://"$GITHUB_CREDENTIALS_USR":"$GITHUB_CREDENTIALS_PSW"@github.com/sumit871996/imageidentificationconfig.git
+                    sh backendscript.sh "$REVISION"
+                    git add .
+                    git commit -m "updated backend deployment file"
+                    git push https://"$GITHUB_CREDENTIALS_USR":"$GITHUB_CREDENTIALS_PSW"@github.com/sumit871996/imageidentificationconfig.git
+                    '''
+          }
+          }
+          } 
+          }
 
           stage('Push to harbor'){
           agent{
