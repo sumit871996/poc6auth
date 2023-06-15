@@ -86,7 +86,10 @@ stage('Building'){
         // If you have configured more than one global server connection, you can specify its name
 //      sh "${scannerHome}/bin/sonar-scanner"
 script {
-        sh "sudo dotnet sonarscanner end /d:sonar.login='sqp_f6228200fef13a91ad6048ea823e3399de57bdf5'"
+        sh'''
+        cd /home/sumit_bharat_mandlik/remotejenkins/workspace/employeeregistration_auth/JWTAuth_Validation/
+        sudo dotnet sonarscanner end /d:sonar.login='sqp_f6228200fef13a91ad6048ea823e3399de57bdf5'
+        '''
         }
     
         }
