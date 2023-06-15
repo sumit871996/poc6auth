@@ -1,9 +1,7 @@
 
 pipeline {
      agent none
-     options {
-        skipDefaultCheckout(true)
-    }
+     
      environment {
         dockerImage = ''
         registry = 'sumithpe/poc6auth'
@@ -12,11 +10,10 @@ pipeline {
     }
     stages {
     
-    stage('Build'){
+    stage('Building'){
     agent{
      label 'sonarQube_node'
      }
-     
             steps{
                sh '''
                pwd
