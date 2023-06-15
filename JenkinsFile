@@ -14,7 +14,7 @@ pipeline{
      label 'pocauth'
      }
           steps{ 
-          git branch: 'main', url: 'https://github.com/RutikKalokhe/Image-Identification-Backend.git'
+          git branch: 'main', url: 'https://github.com/sumit871996/poc6auth.git'
                }
           }
       
@@ -23,7 +23,7 @@ pipeline{
      label 'pocauth'
      }
           steps{
-               sh "docker image build -t sumithpe/imagebackidentification:$REVISION ."
+               sh "docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/."
                }  
           }
           
