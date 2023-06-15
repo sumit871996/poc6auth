@@ -95,7 +95,19 @@ script {
         }
         }
 
-          
+           stage('Push to harbor'){
+          agent{
+        label 'harbor_node'
+    }
+            steps{
+            sh "docker image prune -af"
+                sh "docker image pull sumithpe/poc6auth"
+                  sh "docker image tag sumithpe/poc6auth 20.21.104.152/employeerreqistartion/poc6auth"
+                sh 'echo $HARBOR_CREDENTIALS_PSW | docker login 20.21.104.152 -u $HARBOR_CREDENTIALS_USR --password-stdin'  
+                sh "docker image push 20.21.104.152/employeerreqistartion/poc6auth"
+            }
+        }
+
   
           
      }
