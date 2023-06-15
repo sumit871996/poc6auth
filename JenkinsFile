@@ -1,6 +1,8 @@
 pipeline{
      agent none
-     environment{     
+     environment{   
+     PATH = "$PATH:/root/.dotnet/tools"
+     
     DOCKERHUB_CREDENTIALS= credentials('dockerhub_id')
     GITHUB_CREDENTIALS= credentials('github_id')
     REVISION = 19
@@ -30,56 +32,39 @@ pipeline{
           
           stage('Docker push'){
           agent{
-     label 'imageidentificationfront'
+     label 'pocauth'
      }
           steps{
                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                        sh "docker image push sumithpe/imagebackidentification:$REVISION"
+                        sh "docker image push sumithpe/poc6auth:latest"
                
           }
           }   
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          stage('Git update'){
-          agent{
-     label 'imageidentificationfront'
+          stage('docker stop container') {
+        agent {
+     label 'pocauth'
      }
-          steps{
-          script {
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-          sh '''
-               cd /home/hpe/imageidentification/imageidentificationconfig
-                    git pull https://"$GITHUB_CREDENTIALS_USR":"$GITHUB_CREDENTIALS_PSW"@github.com/sumit871996/imageidentificationconfig.git
-                    sh backendscript.sh "$REVISION"
-                    git add .
-                    git commit -m "updated backend deployment file"
-                    git push https://"$GITHUB_CREDENTIALS_USR":"$GITHUB_CREDENTIALS_PSW"@github.com/sumit871996/imageidentificationconfig.git
-                    '''
-          }
-          }
-          } 
-          }
+         steps {
+        
+            sh "docker ps -f name=poc6authcon  -q | xargs --no-run-if-empty docker container stop"
+            sh "docker container ls -a -fname=poc6authcon -q | xargs -r docker container rm"
+            
+         }
+       }
 
-          stage('Push to harbor'){
-          agent{
-        label 'harbor_node'
-    }
-            steps{
-            sh "docker image prune -af"
-                sh "docker image pull sumithpe/imagebackidentification:$REVISION"
-                  sh "docker image tag sumithpe/imagebackidentification:$REVISION 20.21.104.152/imageidentification/imagebackidentification:$REVISION"
-                sh 'echo $HARBOR_CREDENTIALS_PSW | docker login 20.21.104.152 -u $HARBOR_CREDENTIALS_USR --password-stdin'  
-                sh "docker image push 20.21.104.152/imageidentification/imagebackidentification:$REVISION"
+      stage('Docker Run') {
+       agent {
+     label 'pocauth'
+     }
+        steps {
+          
+                sh "sudo docker container run -d -p 49356:80 --rm --name poc6authcon sumithpe/poc6auth"
+                
             }
         }
+
           
+  
           
      }
 }
