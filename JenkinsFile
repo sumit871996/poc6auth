@@ -1,43 +1,46 @@
-
-pipeline {
+pipeline{
      agent none
-     
-     environment {
-        dockerImage = ''
-        registry = 'sumithpe/poc6auth'
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub_id')
-        PATH = "$PATH:/root/.dotnet/tools"
-    }
-    stages {
-    
-
-    
-stage('Build Docker Images') {
-agent {
+     environment{ 
+    dockerImage = ''
+    registry = 'sumithpe/poc6auth'
+    PATH = "$PATH:/root/.dotnet/tools"
+    DOCKERHUB_CREDENTIALS= credentials('dockerhub_id')
+    GITHUB_CREDENTIALS= credentials('github_id')
+    REVISION = 19
+    HARBOR_CREDENTIALS = credentials('harbor_id') 
+} 
+     stages{
+         stage('Checkout') {
+         agent{
      label 'poc6-auth'
      }
-            steps {
-                
-                    sh "sudo docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/"
-                
-            }
-        }
-stage('Upload to DockerHub'){
-agent {
+          steps{ 
+          git branch: 'main', url: 'https://github.com/sumit871996/poc6auth.git'
+               }
+          }
+      
+          stage('Docker build'){
+          agent{
      label 'poc6-auth'
      }
-            steps {
-                
-                       sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+          steps{
+             
+               sh "sudo docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/"
+               }  
+          }
+          
+          
+          stage('Docker push'){
+          agent{
+     label 'poc6-auth'
+     }
+          steps{
+               sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                         sh "sudo docker image push sumithpe/poc6auth:latest"
-                       
-                }
-            }
-
-
-
-
-        stage('docker stop container') {
+               
+          }
+          }  
+          stage('docker stop container') {
         agent {
      label 'poc6-auth'
      }
@@ -48,7 +51,7 @@ agent {
             
          }
        }
-       stage('Docker Run') {
+          stage('Docker Run') {
        agent {
      label 'poc6-auth'
      }
@@ -58,5 +61,20 @@ agent {
                 
             }
         }
+
+          stage('Push to harbor'){
+          agent{
+        label 'harbor_node'
     }
+            steps{
+            sh "docker image prune -af"
+                sh "docker image pull sumithpe/imagebackidentification:$REVISION"
+                  sh "docker image tag sumithpe/imagebackidentification:$REVISION 20.21.104.152/imageidentification/imagebackidentification:$REVISION"
+                sh 'echo $HARBOR_CREDENTIALS_PSW | docker login 20.21.104.152 -u $HARBOR_CREDENTIALS_USR --password-stdin'  
+                sh "docker image push 20.21.104.152/imageidentification/imagebackidentification:$REVISION"
+            }
+        }
+          
+          
+     }
 }
