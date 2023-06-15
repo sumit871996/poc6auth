@@ -10,29 +10,7 @@ pipeline {
     }
     stages {
     
-    stage('Building'){
-    agent{
-     label 'sonarQube_node'
-     }
-            steps{
-                   sh "pwd"    
-            }
-         }
-        stage('SonarQube analysis') {
-        agent {
-     label 'sonarQube_node'
-     }
-//    def scannerHome = tool 'SonarScanner 4.0';
-        steps{
-         
-        // If you have configured more than one global server connection, you can specify its name
-//      sh "${scannerHome}/bin/sonar-scanner"
-script {
-        sh "sudo dotnet sonarscanner end /d:sonar.login=sqp_d603102bb6539e9746d5651f69e6da3ba31113b4"
-        }
-    
-        }
-        }
+
     
 stage('Build Docker Images') {
 agent {
