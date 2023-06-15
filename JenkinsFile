@@ -70,8 +70,8 @@ stage('Building'){
             steps{
                    sh'''
                    export PATH=$DOTNET_PATH:$PATH
-                   sudo dotnet sonarscanner begin /k:"pocauth" /d:sonar.host.url="http://35.225.86.148:9000"  /d:sonar.login="sqp_f6228200fef13a91ad6048ea823e3399de57bdf5"
                    cd JWTAuth_Validation/
+                   sudo dotnet sonarscanner begin /k:"pocauth" /d:sonar.host.url="http://35.225.86.148:9000" /d:sonar.login="sqp_f6228200fef13a91ad6048ea823e3399de57bdf5"
                    sudo dotnet build
                    sudo dotnet sonarscanner end /d:sonar.login='sqp_f6228200fef13a91ad6048ea823e3399de57bdf5'
                    '''
