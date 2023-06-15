@@ -13,7 +13,7 @@ pipeline {
     stages {
     
     stage('Build'){
-    agent {
+    agent{
      label 'sonarQube_node'
      }
      
@@ -41,7 +41,7 @@ script {
     
 stage('Build Docker Images') {
 agent {
-     label 'authenticationNode'
+     label 'poc6-auth'
      }
             steps {
                 
@@ -51,7 +51,7 @@ agent {
         }
 stage('Upload to DockerHub'){
 agent {
-     label 'authenticationNode'
+     label 'poc6-auth'
      }
             steps {
                 
@@ -66,7 +66,7 @@ agent {
 
         stage('docker stop container') {
         agent {
-     label 'authenticationNode'
+     label 'poc6-auth'
      }
          steps {
         
@@ -77,7 +77,7 @@ agent {
        }
        stage('Docker Run') {
        agent {
-     label 'authenticationNode'
+     label 'poc6-auth'
      }
         steps {
           
