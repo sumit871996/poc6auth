@@ -68,9 +68,9 @@ stage('Building'){
      label 'sonarQube_node'
      }
             steps{
-                   
-                   dotnet sonarscanner begin /k:'poc6-auth' /d:sonar.host.url='http://35.225.86.148:9000' /d:sonar.login='sqp_d603102bb6539e9746d5651f69e6da3ba31113b4' && dotnet build
-                   
+                   sh'''
+                   export PATH=$DOTNET_PATH:$PATH && dotnet sonarscanner begin /k:'poc6-auth' /d:sonar.host.url='http://35.225.86.148:9000' /d:sonar.login='sqp_d603102bb6539e9746d5651f69e6da3ba31113b4' && dotnet build
+                   '''
             }
          }
         stage('SonarQube analysis') {
