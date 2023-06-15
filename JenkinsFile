@@ -15,7 +15,7 @@ pipeline {
      label 'sonarQube_node'
      }
             steps{
-               pwd
+               echo 'hi'
                 
             }
          }
