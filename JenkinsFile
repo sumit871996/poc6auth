@@ -1,0 +1,74 @@
+pipeline{
+     agent none
+     environment{   
+ 
+    DOCKERHUB_CREDENTIALS= credentials('dockerhub_id')
+    GITHUB_CREDENTIALS= credentials('github_id')
+    REVISION = 19
+    DOTNET_PATH = "/root/.dotnet/tools"
+    HARBOR_CREDENTIALS = credentials('harbor_id') 
+
+    
+} 
+     stages{
+         stage('Checkout') {
+         agent{
+     label 'pocauth'
+     }
+          steps{ 
+          git branch: 'main', url: 'https://github.com/sumit871996/poc6auth.git'
+               }
+          }
+      
+          stage('Docker build'){
+          agent{
+     label 'pocauth'
+     }
+          steps{
+               sh "docker image build -t sumithpe/poc6auth ./JWTAuth_Validation/."
+               }  
+          }
+          
+          
+          stage('Docker push'){
+          agent{
+     label 'pocauth'
+     }
+          steps{
+               sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                        sh "docker image push sumithpe/poc6auth:latest"
+               
+          }
+          }   
+          stage('docker stop container') {
+        agent {
+     label 'pocauth'
+     }
+         steps {
+        
+            sh "docker ps -f name=poc6authcon  -q | xargs --no-run-if-empty docker container stop"
+            sh "docker container ls -a -fname=poc6authcon -q | xargs -r docker container rm"
+            
+         }
+       }
+
+      stage('Docker Run') {
+       agent {
+     label 'pocauth'
+     }
+        steps {
+          
+                sh "sudo docker container run -d -p 49356:80 --rm --name poc6authcon sumithpe/poc6auth"
+                
+            }
+        }
+
+
+
+
+  
+
+  
+          
+     }
+}
